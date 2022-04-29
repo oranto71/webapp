@@ -30,6 +30,21 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <distributionManagement>
+      <repository>
+        <id>nexus</id>
+        <name>TT New World Technology Releases Nexus Repository</name>
+        <url>http://3.91.100.130:8081/repository/ttnwt-release/</url>
+      <repository>
+      
+       <repository>
+        <id>nexus</id>
+        <name>TT New World Technology Snapshot Nexus Repository</name>
+        <url>http://3.91.100.130:8081/repository/ttnwt-snapshot/</url>
+      <repository> 
+    
+  </distributionManagement>
 
   <build>
     <finalName>tt.test</finalName>
