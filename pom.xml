@@ -32,17 +32,17 @@
   </dependencies>
   
   <distributionManagement>
-      <releaseRepository>
+      <ReleaseRepository>
         <id>nexus</id>
         <name>TT New World Technology Releases Nexus Repository</name>
         <url>http://3.91.100.130:8081/repository/ttnwt-release/</url>
-      <releaseRepository>
+      <ReleaseRepository>
       
-       <snapshotRepository>
+       <SnapshotRepository>
         <id>nexus</id>
         <name>TT New World Technology Snapshot Nexus Repository</name>
         <url>http://3.91.100.130:8081/repository/ttnwt-snapshot/</url>
-      <snapshotRepository> 
+      <SnapshotRepository> 
     
   </distributionManagement>
 
