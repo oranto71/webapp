@@ -1,4 +1,1 @@
-# pull base image
-FROM tomcat;8-jre8
-MAINTAINER "TTNWT'
-copy ./webapp/target/test.war /usr/local/tomcat/webapps
+
