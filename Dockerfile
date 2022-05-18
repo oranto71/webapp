@@ -2,4 +2,4 @@
 FROM tomcat:8-jre8
 # maintainer
 MAINTAINER "Tangko"
-COPY /home/ubuntu/.jenkins/workspace/'docker intergration'/target/tt.test.war /usr/local/tomcat/webapps
+COPY /home/ubuntu/.jenkins/workspace/again/target/tt.test.war /usr/local/tomcat/webapps
