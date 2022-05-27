@@ -14,7 +14,7 @@ node('master')
                    }
     stage('Continuous testing')
                    {
-                    sh 'echo "testing has passed"'
+                    sh 'echo "testing was successful"'
                    }
      stage('Continuous delivery')
                    {
