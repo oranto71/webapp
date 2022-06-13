@@ -1,88 +1,43 @@
-Jenkins
-Install
-Execute the shell script: jenkins_install.sh
+omnibus-ansible
+This script has moved to: neillturner/omnibus-ansible
+This is the original version of the Ansible install script. If you want the latest, please see the above link!
+Install latest Ansible via pip + dependencies via a shell script
 
-Configure a proxy using nginx or apache to http://ci.company.example.com.br(I'll use this URL as example).
+This file is used to install ansible in test kitchen when you set in the kitchen.yaml file
 
-Configure credentials
-http://ci.example.com.br/credential-store/domain/_/newCredentials
-Configure plugins:
-Add Github Plugin, Multi-Branch Project Plugin, AnsiColor Plugin, Slack Plugin and Embeddable Build Status at http://ci.example.com.br/pluginManager/available
-Configure Shell section setting Shell executable
-Use /bin/bash at http://ci.example.com.br/jenkins/configure
-Configure GitHub Webhooks
-Navigate to Webhooks & Services under Settings on the GitHub repository page https://github.com/:company/:projet/
-Click Configure services and select the Jenkins (GitHub plugin) option
-Enter the address to your Jenkins server http://ci.example.com.br/github-webhook/, check Active and update your settings.
-Try it out by pushing a commit to GitHub and verifying that a new build is triggered in Jenkins
-Create a new build configuration
-Access http://ci.example.com.br/view/All/newJob
+require_ansible_omnibus: true
 
-Add new item (Build a free-style multi-branch project)
+By default test kitchen will always download and use the latest version of this install file.
 
-GitHub project: fill with https://github.com/:company/:projet/
+WARNING: AS SOON AS YOU MERGE CODE HERE IT IS INSTANTLY AVAILABLE TO EVERYONE DOING OMNIBUS KITCHEN ANSIBLE INSTALLS:
 
-Execute concurrent builds if necessary check this options
+To get a previous version or lock the install script to a particular version update your kitchen.yaml file to: ansible_omnibus_url: https://raw.githubusercontent.com/neillturner/omnibus-ansible/ab2fa5771b6ef357786d7ff57d83fc8c97c22fed/ansible_install.sh
 
-Source Code Management:
+where ab2fa5771b6ef357786d7ff57d83fc8c97c22fed is the commit sha of the code.
 
-Sync Branches Schedule: H/2 * * * * (every two minutes)
+Supported platforms:
 
-Git check this option
+centos-5.10 - Fails due to pip not working on python 2.4.. this article provides a workaround, but it seemed risky and wouldn't reflect most user's reality of running Ansible on CentOS 5.
+centos-6.4 - Works! (Note: Has procps instead of procps-ng)
+centos-6.5 - Works! (Note: Has procps instead of procps-ng)
+centos-7.0 - Works! (Note: Has procps-ng instead of procps)
+ubuntu-10.04 - Fails due to pycrypto conflict
+ubuntu-12.04 - Works!
+ubuntu-14.04 - Works!
+ubuntu-14.10 - Works!
+ubuntu-15.04 - Works!
+debian-6.0.8 - Works!
+debian-6.0.10 - Works!
+debian-7.8 - Works!
+debian-8.1 - Works!
+It does some basic OS detection and tries to install all the things that Ansible needs, including some optional packages which are technically dependencies of some core Ansible modules (Ansible playbooks that use these modules would simply fail without them).
 
-Repository URL: fill with git@github.com:company/project.git
+It also installs ca-certificates and has built-in yum failure retry ability (With RHEL / CentOS, this is important because yum tends to fail a lot due to stale cache and old SSL CA cert chain issues). It also tries to install via packaged python-pip, and if that fails, it tries easy_install pip.
 
-Credentials: select company-credentials or the name specified at Configure credentialsstep
+This ends up being a lot of things to install (mainly due to optional Ansible module dependencies), but the hope is that it covers all the bases so that some Ansible modules don't just fail unexpectedly.
 
-Include branches: fill with * to include all branchs
+The tradeoff is the amount of download / install time this takes versus a more minimal install. This useful to avoid having to bootstrap Ansible's dependencies using a pre-role or pre_tasks: in the test playbook when just testing one playbook or role without redoing the same work that already done in this script.
 
-Build Triggers:
+This script was built with reliability, resiliency, and installing all "full-stack" dependencies (hence: Omnibus) in mind, not speed.
 
-Check Build when a change is pushed to GitHub
-
-Build Environment:
-
-Check Color ANSI Console Output and select xterm from ANSI color map
-
-Build (Execute shell):
-
-#!/bin/bash
-cp /var/lib/jenkins/sample_database.yml config/database.yml
-
-function clean_up {
-  RAILS_ENV=test bundle exec rake db:drop
-  
-  exit $1
-}
-
-rvm use 2.2.1 --install
-rvm info
-ruby --version
-
-gem install bundler --no-rdoc --no-ri
-bundle install
-
-RAILS_ENV=test bundle exec rake db:create:all
-RAILS_ENV=test bundle exec rake db:migrate
-RAILS_ENV=test bundle exec rake db:test:prepare
-
-trap clean_up SIGHUP SIGINT SIGTERM
-
-SPEC_OPTS="--no-drb --format documentation"
-
-bundle exec rspec spec
-
-# Capture value returnd by last command
-rspec_status=$?
-
-clean_up $rspec_status
-Rspec configuration
-To get RSpec colours working in Jenkins you have to specify the following in the RSpec configuration block:
-
-  RSpec.configure do |config|
-   config.tty = true
-  end
-This is because the Jenkins shell is a pseudo TTY.
-
-Slack Integration
-To configure integration with Slack https://company.slack.com/services/new/jenkins-ci
+Feel free to fork this repo and create custom install scripts.
