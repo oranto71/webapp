@@ -3,8 +3,8 @@ terraform {  #block call terraform
     bucket = "ttnwt-bucket-school"
     key = "ec2/ec2.tfstate"  #just the path and the file name for your tfstate
     region = "us-east-1"
-    access_key = "AKIAQ6OEQFVNRZMCRFBA"
-    secret_key = "W87u6NcSOZCmVByVJO2Zfsb6TTh3TV1WjEZX+cYm"
+    access_key = var.access-KEY
+    secret_key = var.secret_key
     dynamodb_table = "terraform-state-lock-dynamo-tt_school"
   }
 }
